@@ -1,0 +1,94 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* --- LENIS SMOOTH SCROLL SETTINGS --- */
+html.lenis, html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* --- GLOBAL STYLES --- */
+body {
+    background-color: #F3F2ED; 
+    color: #1e293b;
+    font-family: 'Poppins', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* ⚠️ REMOVED GLOBAL TRANSITION: Startup lag prevent karne ke liye */
+}
+
+/* Dark Mode Default Override */
+.dark body {
+    background-color: #020617;
+    color: #F3F2ED;
+}
+
+/* Custom Selection Color */
+::selection {
+    background-color: #1AA3A3;
+    color: white;
+}
+.dark ::selection {
+    background-color: #F54A00;
+    color: white;
+}
+
+/* --- CUSTOM SCROLLBAR (Browser Default) --- */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+.dark ::-webkit-scrollbar-track {
+    background: #020617;
+}
+.dark ::-webkit-scrollbar-thumb {
+    background: #333;
+    border-radius: 4px;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* --- UTILITY CLASSES --- */
+
+/* 1. Existing Utilities */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+.custom-scrollbar::-webkit-scrollbar { width: 6px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background-color: rgba(156, 163, 175, 0.5); border-radius: 20px; }
+.dark .custom-scrollbar::-webkit-scrollbar-thumb { background-color: rgba(75, 85, 99, 0.5); }
+
+/* 2. 👇 NEW: For Wizard Modal (Scrolls but Hidden Bar) */
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+.scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
