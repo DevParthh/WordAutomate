@@ -4,21 +4,17 @@ import { Link, useNavigate } from 'react-router-dom';
 import ThreeDLogo from '../components/common/ThreeDLogo'; 
 import { Loader2, LockKeyhole, Building2, ArrowRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-// 👇 Import Theme Hook
 import { useTheme } from '../context/ThemeContext';
 import Breadcrumb from '../components/common/Breadcrumb';
 
 const Login = () => {
   const { login } = useAuth();
-  // 👇 Destructure manual setter
   const { setThemeManual } = useTheme();
   
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [isLogoHovered, setIsLogoHovered] = useState(false);
 
-  // 🔥 FORCE DARK MODE ON MOUNT
-  // Isse Login page hamesha Dark dikhega (Premium look)
   useEffect(() => {
     setThemeManual('dark');
   }, []);
@@ -30,29 +26,31 @@ const Login = () => {
       navigate('/dashboard');
     } catch (error) {
       console.error("Login Failed:", error);
-      alert("Access Restricted: Please sign in with your @gst.sies.edu.in account.");
+      // Only show the alert if the domain was explicitly rejected
+      if (error.message === "INVALID_DOMAIN") {
+        alert("Access Restricted: Please sign in with your @gst.sies.edu.in account.");
+      }
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    // Main Container: Fixed Height (No Body Scroll), Center Alignment
     <div className="fixed inset-0 w-full h-[100dvh] bg-[#F3F2ED] dark:bg-[#050505] transition-colors duration-300 font-sans overflow-hidden flex flex-col items-center justify-center">
       
-      {/* 1. TOP NAVIGATION (Fixed Top-Left) */}
+      {/* TOP NAVIGATION */}
       <div className="absolute top-6 left-6 z-30 hidden md:block">
         <Breadcrumb items={[{ label: 'Authentication', path: '/login' }]} />
       </div>
 
-      {/* 2. AMBIENT BACKGROUND */}
+      {/* AMBIENT BACKGROUND */}
       <div className="absolute inset-0 pointer-events-none z-0">
          <div className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] max-w-[800px] max-h-[800px] rounded-full blur-[120px] bg-[#F54A00] opacity-10 dark:opacity-[0.05]" />
          <div className="absolute bottom-[-10%] right-[-10%] w-[60vw] h-[60vw] max-w-[800px] max-h-[800px] rounded-full blur-[120px] bg-[#1AA3A3] opacity-10 dark:opacity-[0.05]" />
          <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.02)_1px,transparent_1px)] dark:bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_70%_70%_at_50%_50%,black,transparent)]" />
       </div>
 
-      {/* 3. CENTERED CARD WRAPPER */}
+      {/* CENTERED CARD WRAPPER */}
       <div className="w-full h-full overflow-y-auto overflow-x-hidden flex items-center justify-center p-4 relative z-10 scrollbar-hide">
         
         <motion.div
@@ -62,20 +60,17 @@ const Login = () => {
           className="w-full max-w-[420px] bg-white/80 dark:bg-[#111111]/80 p-6 md:p-8 rounded-[32px] shadow-2xl shadow-slate-200/50 dark:shadow-black/50 border border-white/50 dark:border-white/10 backdrop-blur-xl flex flex-col items-center text-center mx-auto my-auto"
         >
           
-          {/* LOGO SECTION (Icon + Text) */}
+          {/* LOGO SECTION */}
           <div 
             className="mb-8 flex items-center justify-center gap-3 cursor-pointer group select-none"
             onMouseEnter={() => setIsLogoHovered(true)}
             onMouseLeave={() => setIsLogoHovered(false)}
           >
-            {/* 3D Icon Container (Fixed Size) */}
             <div className="relative h-14 w-14 md:h-16 md:w-16 shrink-0">
                <ThreeDLogo className="h-full w-full" isHovered={isLogoHovered} />
-               {/* Optional Glow */}
                <div className="absolute inset-0 bg-[#F54A00] opacity-0 group-hover:opacity-20 transition-opacity duration-500 blur-xl rounded-full"></div>
             </div>
 
-            {/* Brand Text */}
             <span className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
               Word<span className="text-[#1AA3A3]">Automate</span>
             </span>
@@ -111,7 +106,6 @@ const Login = () => {
               </>
             )}
 
-            {/* Shine Effect */}
             {!loading && (
               <div className="absolute inset-0 rounded-2xl pointer-events-none overflow-hidden">
                 <div className="absolute top-0 left-[-100%] w-1/2 h-full bg-gradient-to-r from-transparent via-white/20 dark:via-black/10 to-transparent skew-x-12 group-hover:animate-shine" />
@@ -122,7 +116,6 @@ const Login = () => {
           {/* Security & Restriction Info */}
           <div className="mt-6 w-full space-y-3">
               
-              {/* Security Note */}
               <div className="flex items-start gap-3 text-left bg-emerald-50/50 dark:bg-emerald-900/10 p-3 rounded-2xl border border-emerald-100 dark:border-emerald-900/30">
                   <div className="p-1 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg text-emerald-600 dark:text-emerald-400 shrink-0">
                       <LockKeyhole size={14} />
@@ -133,7 +126,6 @@ const Login = () => {
                   </div>
               </div>
 
-              {/* Domain Restriction Note */}
               <div className="flex items-center gap-3 text-left bg-slate-50 dark:bg-white/5 p-3 rounded-2xl border border-slate-100 dark:border-white/10">
                   <div className="p-1 bg-slate-200 dark:bg-white/10 rounded-lg text-slate-500 dark:text-slate-400 shrink-0">
                       <Building2 size={14} />
@@ -158,7 +150,6 @@ const Login = () => {
         </motion.div>
       </div>
 
-      {/* Animation Style */}
       <style>{`
         @keyframes shine { 100% { left: 125%; } }
         .group-hover\\:animate-shine { animation: shine 0.75s; }
