@@ -15,6 +15,9 @@ export const AuthProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
+    // 🔥 NOTE: Theme logic removed from here. 
+    // It is now fully handled by ThemeContext observing currentUser.
+
     const checkAuthStatus = async () => {
         try {
             const { data } = await axios.get(`${BACKEND_URL}/is-auth`, { withCredentials: true });
@@ -36,23 +39,9 @@ export const AuthProvider = ({ children }) => {
 
     const login = async () => {
         try {
-            // 1. Open Microsoft Login Popup
             const loginResponse = await instance.loginPopup(loginRequest);
-            const account = loginResponse.account;
-            
-            // 2. Extract email safely
-            const userEmail = account?.username || account?.idTokenClaims?.preferred_username || account?.idTokenClaims?.email || "";
-
-            // 3. FRONTEND VALIDATION (Case-Insensitive)
-            if (!userEmail.toLowerCase().endsWith('@gst.sies.edu.in')) {
-                // If it fails, force clear this specific account from cache immediately
-                await instance.logoutPopup({ account: account });
-                // Throw specific error to be caught by Login.jsx
-                throw new Error("INVALID_DOMAIN");
-            }
-
-            // 4. If domain is valid, proceed to backend authentication
             const accessToken = loginResponse.accessToken;
+
             const { data } = await axios.post(
                 `${BACKEND_URL}/microsoft-login`,
                 { accessToken },
@@ -61,6 +50,7 @@ export const AuthProvider = ({ children }) => {
 
             if (data.success) {
                 setCurrentUser(data.userData);
+                // ThemeContext will automatically pick up data.userData.theme
                 return data.userData;
             } else {
                 throw new Error(data.message);
@@ -75,6 +65,7 @@ export const AuthProvider = ({ children }) => {
             await axios.post(`${BACKEND_URL}/logout`, {}, { withCredentials: true });
             await instance.logoutPopup();
             setCurrentUser(null);
+            // Theme reset logic is handled in ThemeContext or allowed to persist locally
         } catch (error) {
             console.error("Logout Error:", error);
         }
