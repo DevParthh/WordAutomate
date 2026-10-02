@@ -26,7 +26,7 @@ app.use(compression()); // Responses ko fast banayega
 const allowedOrigins = [
     "http://localhost:5173",
     "https://word-automate.vercel.app",   // Tera Live Frontend
-    "https://word-automate.vercel.app/" 
+    "https://word-automate-kappa.vercel.app/" 
 ];
 
 // Middleware
